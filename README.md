@@ -50,3 +50,7 @@ The JAR file is already included in this repository, but if you like to build yo
 1. Install [Node.js](https://nodejs.org/en/download)
 2. Install [Java Development Kit](https://www.oracle.com/java/technologies/downloads/)
 3. Run `node build.js`
+
+### Maven Central Repository for HtmlUnit dependencies
+
+https://repo1.maven.org/maven2/org/htmlunit/
