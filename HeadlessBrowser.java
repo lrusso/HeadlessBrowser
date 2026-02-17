@@ -132,21 +132,30 @@ public class HeadlessBrowser {
                     DomElement element = page.querySelector(trimmed);
                     if (element != null && element instanceof HtmlElement) {
                         lastElement = (HtmlElement) element;
-                        Page nextPage = lastElement.click();
-                        webClient.waitForBackgroundJavaScriptStartingBefore(15000);
                         try {
-                            Thread.sleep(5000); // 5 seconds delay between selectors
-                        } catch (InterruptedException ie) {
-                            Thread.currentThread().interrupt();
-                        }
+                            Page nextPage = lastElement.click();
+                            webClient.waitForBackgroundJavaScriptStartingBefore(15000);
+                            try {
+                                Thread.sleep(5000); // 5 seconds delay between selectors
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                            }
 
-                        if (!(nextPage instanceof HtmlPage)) {
-                            String jsonResult = "{\"url\":\"" + nextPage.getUrl().toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\t", "\\t").replace("\r", "") + "\"}";
-                            System.out.println(jsonResult);
-                            return;
-                        }
+                            if (!(nextPage instanceof HtmlPage)) {
+                                String jsonResult = "{\"url\":\"" + nextPage.getUrl().toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\t", "\\t").replace("\r", "") + "\"}";
+                                System.out.println(jsonResult);
+                                return;
+                            }
 
-                        page = (HtmlPage) nextPage;
+                            page = (HtmlPage) nextPage;
+                        } catch (IllegalStateException ise) {
+                            // HtmlUnit's JS parser can crash on unsupported syntax.
+                            // Recover by using whatever page is currently in the window.
+                            Page currentPage = webClient.getCurrentWindow().getEnclosedPage();
+                            if (currentPage instanceof HtmlPage) {
+                                page = (HtmlPage) currentPage;
+                            }
+                        }
                     }
                 }
             }
