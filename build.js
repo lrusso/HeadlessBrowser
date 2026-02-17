@@ -31,13 +31,13 @@ if (fs.existsSync("HeadlessBrowser.jar")) {
 
 // 4. compile the java source file
 run(
-  'javac --release 9 -cp "htmlunit-4.17.0/htmlunit-4.17.0.jar:htmlunit-4.17.0/lib/*" HeadlessBrowser.java -d classes'
+  'javac --release 9 -cp "htmlunit/htmlunit-4.21.0.jar:htmlunit/lib/*" HeadlessBrowser.java -d classes'
 )
 
 // 5. unpack the main jar and its dependencies
 process.chdir("jar-temp")
-run("jar xf ../htmlunit-4.17.0/htmlunit-4.17.0.jar")
-run("sh -c 'for f in ../htmlunit-4.17.0/lib/*.jar; do jar xf \"$f\"; done'")
+run("jar xf ../htmlunit/htmlunit-4.21.0.jar")
+run("sh -c 'for f in ../htmlunit/lib/*.jar; do jar xf \"$f\"; done'")
 
 // 6. copy compiled class file into the temp jar folder
 fs.copyFileSync("../classes/HeadlessBrowser.class", "HeadlessBrowser.class")
